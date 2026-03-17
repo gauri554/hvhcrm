@@ -1,10 +1,23 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import ComponentContainerCard from "@/components/ComponentContainerCard";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Form, Row, Modal } from "react-bootstrap";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Filter from "./Filter";
+import SendMessageModal from "./SendMessageModal";
+import FollowupModal from "./FollowupModal";
+import B2CLeadModal from "./B2CLeadModal";
+import B2BLeadModal from "./B2BLeadModal";
 
 const Leads = () => {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [phone, setPhone] = useState<string>("+91 8421135320");
+
+  const handleSave = () => {
+    setIsEditing(false);
+    // 👉 call API here if needed
+  };
   return (
     <>
       {/* filter */}
@@ -64,23 +77,8 @@ const Leads = () => {
                 B2B
               </Button>
 
-              <Button
-                variant="outline-danger"
-                size="sm"
-                style={{ fontSize: "10px", fontWeight: "bold" }}
-              >
-                <Icon icon="mdi:account-plus-outline" className="me-1" />
-                B2C Lead
-              </Button>
-
-              <Button
-                variant="outline-danger"
-                size="sm"
-                style={{ fontSize: "10px", fontWeight: "bold" }}
-              >
-                <Icon icon="mdi:account-group-outline" className="me-1" />
-                B2B Lead
-              </Button>
+              <B2CLeadModal />
+              <B2BLeadModal />
 
               <Button
                 variant="outline-secondary"
@@ -88,6 +86,13 @@ const Leads = () => {
                 style={{ fontSize: "10px", fontWeight: "bold" }}
               >
                 <Icon icon="mdi:refresh" />
+              </Button>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                style={{ fontSize: "10px", fontWeight: "bold" }}
+              >
+                <Icon icon="mdi:file-export" />
               </Button>
             </div>
           </div>
@@ -131,6 +136,12 @@ const Leads = () => {
               <h6 className="fw-bold">
                 Total Record Found :- <span className="text-primary">999</span>
               </h6>
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Search..."
+                style={{ fontSize: "10px" }}
+              />
             </Col>
           </Row>
         </div>
@@ -192,9 +203,40 @@ const Leads = () => {
                   </div>
 
                   <div className="d-flex align-items-center gap-1">
-                    <Icon icon="mdi:phone" />
-                    +91 8421135320
-                    <Icon icon="mdi:pencil" style={{ cursor: "pointer" }} />
+                    <div className="d-flex align-items-center gap-2">
+                      <Icon icon="mdi:phone" />
+
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={phone}
+                          autoFocus
+                          onChange={(e) => setPhone(e.target.value)}
+                          onBlur={handleSave}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSave();
+                          }}
+                          className="form-control form-control-sm"
+                          style={{ width: "150px", fontSize: "12px" }}
+                        />
+                      ) : (
+                        <>
+                          <span>{phone}</span>
+                          <Icon
+                            icon="mdi:pencil"
+                            style={{
+                              cursor: "pointer",
+                              border: "1px dotted #000",
+                              padding: "1px",
+                              background: "#36b7f1",
+                              color: "#fff",
+                              borderRadius: "50%",
+                            }}
+                            onClick={() => setIsEditing(true)}
+                          />
+                        </>
+                      )}
+                    </div>
                   </div>
 
                   <div>
@@ -205,7 +247,9 @@ const Leads = () => {
 
                 <td>
                   <div>Package</div>
-                  <div>B2C</div>
+                  <div>
+                    <span className="badge bg-success">B2C</span>
+                  </div>
                   <div>raj sir facebook</div>
                 </td>
 
@@ -219,13 +263,7 @@ const Leads = () => {
 
                 <td>
                   <div className="mb-1">Call Back</div>
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    style={{ fontSize: "8px", fontWeight: "bold" }}
-                  >
-                    Follow Up
-                  </Button>
+                  <FollowupModal />
                 </td>
                 <td>NA</td>
                 <td>13-Mar-26</td>
@@ -236,17 +274,31 @@ const Leads = () => {
                 </td>
 
                 <td>
-                  <div className="d-flex justify-content-center gap-2">
+                  <div className="d-flex flex-column gap-1">
                     <span className="action-btn view">
-                      <Icon icon="mdi:eye-outline" />
+                      <Button
+                        variant="success"
+                        size="sm"
+                        style={{ fontSize: "10px" }}
+                        title="View"
+                      >
+                        <Icon icon="mdi:eye-outline" />
+                      </Button>
                     </span>
 
                     <span className="action-btn chat">
-                      <Icon icon="mdi:chat-outline" />
+                      <SendMessageModal />
                     </span>
 
                     <span className="action-btn delete">
-                      <Icon icon="mdi:minus-circle-outline" />
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        style={{ fontSize: "10px" }}
+                        title="Delete"
+                      >
+                        <Icon icon="mdi:minus-circle-outline" />
+                      </Button>
                     </span>
                   </div>
                 </td>
@@ -254,7 +306,19 @@ const Leads = () => {
             </tbody>
           </table>
         </div>
+
+        <div className="d-flex justify-content-center mt-4">
+          <Button
+            variant="primary"
+            size="sm"
+            style={{ fontSize: "10px", fontWeight: "600" }}
+          >
+            Load More <Icon icon="mdi:reload" className="ms-1" />
+          </Button>
+        </div>
       </Card>
+
+      {/* message modal */}
     </>
   );
 };

@@ -5,7 +5,7 @@ import PageTitle from "@/components/PageTitle";
 const LeadsPage = () => {
   return (
     <>
-      <PageTitle title="All Leads" />
+      <PageTitle title=" CRM  - Lead Listing" />
       <Leads />
     </>
   );

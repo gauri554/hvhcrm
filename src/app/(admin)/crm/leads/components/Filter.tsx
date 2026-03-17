@@ -227,9 +227,7 @@ function OffCanvasExample({ name, ...props }: any) {
 function Filter() {
   return (
     <>
-      {["end"].map((placement, idx) => (
-        <OffCanvasExample key={idx} placement={placement} name={placement} />
-      ))}
+      <OffCanvasExample placement="end" name="Filter" />
     </>
   );
 }
