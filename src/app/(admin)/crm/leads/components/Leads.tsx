@@ -285,6 +285,7 @@ const Leads = () => {
                         size="sm"
                         style={{ fontSize: "10px" }}
                         title="View"
+                       onClick={() => router.push("/crm/leads/view-leads")}
                       >
                         <Icon icon="mdi:eye-outline" />
                       </Button>
